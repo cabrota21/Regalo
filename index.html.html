@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Silvia</title>
+    <style>
+        /* --- ESTILOS BASE --- */
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: #0d1b2a; 
+            font-family: 'Segoe UI', sans-serif; color: white;
+        }
+
+        /* --- PANTALLA DE BLOQUEO --- */
+        #bloqueo {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fdf2f8; z-index: 10000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .caja-pass {
+            background: white; padding: 30px; border-radius: 20px; text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 80%; max-width: 300px;
+        }
+        input {
+            width: 90%; padding: 12px; margin: 20px 0; border: 2px solid #db2777;
+            border-radius: 10px; text-align: center; font-size: 1.1rem; outline: none; color: #333;
+        }
+        .btn-entrar {
+            background: #db2777; color: white; border: none; padding: 12px;
+            border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%;
+        }
+
+        /* --- INTERFAZ PRINCIPAL --- */
+        #contenido {
+            display: none; width: 100vw; height: 100vh;
+            display: flex; align-items: center;
+        }
+
+        .seccion-izquierda {
+            width: 35%; padding-left: 5%; z-index: 5;
+        }
+        #reloj { 
+            font-size: 1.4rem; 
+            color: #f472b6; 
+            margin: 15px 0; 
+            font-weight: bold; 
+            letter-spacing: 1px;
+        }
+
+        .seccion-derecha {
+            width: 65%; height: 100%; display: flex; justify-content: center; align-items: center; position: relative;
+        }
+
+        .contenedor-foto {
+            position: relative;
+            width: 95%; 
+            max-width: 750px; 
+        }
+
+        .foto-lirio {
+            width: 100%; height: auto; display: block;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
+        }
+
+        /* --- TEXTOS INTEGRADOS EN LOS PÉTALOS --- */
+        .texto-petalo {
+            position: absolute;
+            color: #9d174d; 
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            transition: all 0.3s ease;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            text-shadow: 0.5px 0.5px 0px rgba(255,255,255,0.4);
+        }
+
+        .texto-petalo:hover {
+            color: #db2777;
+            transform: scale(1.1) !important;
+        }
+
+        /* --- POSICIONES DE LOS PÉTALOS --- */
+        #btn-carta1 { 
+            top: 32%; 
+            right: 24%; 
+            transform: rotate(18deg);
+        }
+
+        #btn-fotos { 
+            top: 28%; 
+            left: 28%; 
+            transform: rotate(-15deg);
+        }
+
+        #btn-proximamente { 
+            top: 55%; 
+            right: 55%; 
+            transform: rotate(-5deg);
+            font-size: 0.9rem;
+        }
+
+        /* --- MODALES --- */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 1000;
+            justify-content: center; align-items: center; backdrop-filter: blur(5px);
+        }
+        .ventana {
+            background: #fffcf2; color: #333; padding: 40px; border-radius: 20px;
+            width: 80%; max-width: 400px; text-align: center;
+        }
+        .btn-cerrar {
+            background: #db2777; color: white; border: none; padding: 12px 25px;
+            border-radius: 10px; margin-top: 25px; cursor: pointer; font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bloqueo">
+        <div class="caja-pass">
+            <h2 style="color: #db2777;">Hola</h2>
+            <input type="password" id="pass" placeholder="Tu nombre...">
+            <button class="btn-entrar" onclick="acceder()">Entrar</button>
+        </div>
+    </div>
+
+    <div id="contenido">
+        <div class="seccion-izquierda">
+            <h1 style="font-size: 2.2rem; margin: 0;">DIAS JUNTOS</h1>
+            <div id="reloj">00a 000d 00h 00m 00s</div>
+            <p style="font-style: italic; opacity: 0.8; border-left: 3px solid #db2777; padding-left: 15px;">
+                "Cada segundo que pasa te quiero más mi tontita, que este numero llegue a infinito"
+            </p>
+        </div>
+
+        <div class="seccion-derecha">
+            <div class="contenedor-foto">
+                <img src="lirio.png" class="foto-lirio" alt="Lirio">
+                
+                <div id="btn-carta1" class="texto-petalo" onclick="abrir('carta1')">Carta 1</div>
+                <div id="btn-fotos" class="texto-petalo" onclick="abrir('fotos')">Fotos</div>
+                <div id="btn-proximamente" class="texto-petalo" onclick="abrir('proximamente')">Proximamente</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-carta1" class="modal">
+        <div class="ventana">
+            <p style="font-size: 1.5rem; font-style: italic; font-family: serif;">Hola Silvia</p>
+            <button class="btn-cerrar" onclick="cerrar('carta1')">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modal-fotos" class="modal">
+        <div class="ventana">
+            <p style="font-weight: bold;">Mas adelante</p>
+            <button class="btn-cerrar" onclick="cerrar('fotos')">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modal-proximamente" class="modal">
+        <div class="ventana">
+            <p style="font-weight: bold;">No te impacientes chavalita...</p>
+            <button class="btn-cerrar" onclick="cerrar('proximamente')">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        function acceder() {
+            if(document.getElementById('pass').value.toLowerCase() === "silvia") {
+                document.getElementById('bloqueo').style.display = "none";
+                document.getElementById('contenido').style.display = "flex";
+            } else { alert("Nombre incorrecto..."); }
+        }
+
+        // FECHA DE INICIO: 17 de Abril, 2025
+        const fechaInicio = new Date("April 17, 2025 00:00:00");
+
+        function actualizarReloj() {
+            const ahora = new Date();
+            const diff = Math.abs(ahora - fechaInicio);
+
+            // Constantes de tiempo
+            const msPorDia = 1000 * 60 * 60 * 24;
+            const msPorAnio = msPorDia * 365.25;
+
+            // Cálculo de Años (Enteros)
+            const anios = Math.floor(diff / msPorAnio);
+            
+            // Cálculo de Días Restantes (Reinicia a 0 al llegar al año)
+            const diasRestantes = Math.floor((diff % msPorAnio) / msPorDia);
+            
+            // Resto de unidades
+            const h = Math.floor((diff % msPorDia) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            // Formateo con ceros a la izquierda
+            const pad = (num, size = 2) => num.toString().padStart(size, '0');
+
+            document.getElementById("reloj").innerHTML = 
+                `${pad(anios)}a ${pad(diasRestantes, 3)}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
+        }
+
+        setInterval(actualizarReloj, 1000);
+        actualizarReloj();
+
+        function abrir(id) { document.getElementById('modal-' + id).style.display = 'flex'; }
+        function cerrar(id) { document.getElementById('modal-' + id).style.display = 'none'; }
+    </script>
+</body>
+</html>
