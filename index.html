@@ -5,118 +5,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Para Silvia</title>
     <style>
-        /* --- ESTILOS BASE --- */
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: #0d1b2a; 
-            font-family: 'Segoe UI', sans-serif; color: white;
-        }
-
-        /* --- PANTALLA DE BLOQUEO --- */
-        #bloqueo {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #fdf2f8; z-index: 10000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .caja-pass {
-            background: white; padding: 30px; border-radius: 20px; text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 80%; max-width: 300px;
-        }
-        input {
-            width: 90%; padding: 12px; margin: 20px 0; border: 2px solid #db2777;
-            border-radius: 10px; text-align: center; font-size: 1.1rem; outline: none; color: #333;
-        }
-        .btn-entrar {
-            background: #db2777; color: white; border: none; padding: 12px;
-            border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%;
-        }
+        /* --- ESTILOS BASE Y BLOQUEO --- */
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #0d1b2a; font-family: 'Segoe UI', sans-serif; color: white; }
+        #bloqueo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fdf2f8; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .caja-pass { background: white; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 80%; max-width: 300px; }
+        input { width: 90%; padding: 12px; margin: 20px 0; border: 2px solid #db2777; border-radius: 10px; text-align: center; font-size: 1.1rem; outline: none; color: #333; }
+        .btn-entrar { background: #db2777; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
 
         /* --- INTERFAZ PRINCIPAL --- */
-        #contenido {
-            display: none; width: 100vw; height: 100vh;
-            display: flex; align-items: center;
+        #contenido { display: none; width: 100vw; height: 100vh; display: flex; align-items: center; }
+        .seccion-izquierda { width: 35%; padding-left: 5%; z-index: 5; }
+        #reloj { font-size: 1.4rem; color: #f472b6; margin: 15px 0; font-weight: bold; letter-spacing: 1px; }
+        .seccion-derecha { width: 65%; height: 100%; display: flex; justify-content: center; align-items: center; position: relative; }
+        .contenedor-foto { position: relative; width: 95%; max-width: 750px; }
+        .foto-lirio { width: 100%; height: auto; display: block; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5)); }
+
+        /* --- TEXTOS PÉTALOS --- */
+        .texto-petalo { position: absolute; color: #9d174d; font-weight: 800; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1.2px; transition: all 0.3s ease; user-select: none; -webkit-tap-highlight-color: transparent; text-shadow: 0.5px 0.5px 0px rgba(255,255,255,0.4); }
+        .texto-petalo:hover { color: #db2777; transform: scale(1.1) !important; }
+        #btn-cartas { top: 32%; right: 24%; transform: rotate(18deg); }
+        #btn-fotos { top: 28%; left: 28%; transform: rotate(-15deg); }
+        #btn-proximamente { top: 55%; right: 55%; transform: rotate(-5deg); font-size: 0.9rem; }
+
+        /* --- MODALES GENERALES --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .ventana { background: #fffcf2; color: #333; padding: 30px; border-radius: 20px; width: 85%; max-width: 500px; text-align: center; max-height: 85vh; overflow-y: auto; position: relative; }
+        .btn-cerrar { background: #db2777; color: white; border: none; padding: 12px 25px; border-radius: 10px; margin-top: 20px; cursor: pointer; font-weight: bold; }
+
+        /* --- ESTILOS CARTAS --- */
+        .lista-cartas { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .item-carta { background: #fce7f3; color: #9d174d; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; border: 2px solid #f9a8d4; transition: 0.3s; text-align: left;}
+        .item-carta:hover { background: #f9a8d4; }
+        .texto-carta { text-align: left; line-height: 1.6; color: #444; }
+
+        /* =========================================
+           --- NUEVOS ESTILOS PARA LA GALERÍA ---
+           ========================================= */
+        
+        /* 1. Cuadrícula de Miniaturas (Grid) */
+        .grid-fotos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Columnas automáticas */
+            gap: 15px;
+            margin-top: 20px;
+            padding-bottom: 10px;
         }
 
-        .seccion-izquierda {
-            width: 35%; padding-left: 5%; z-index: 5;
-        }
-        #reloj { 
-            font-size: 1.4rem; 
-            color: #f472b6; 
-            margin: 15px 0; 
-            font-weight: bold; 
-            letter-spacing: 1px;
-        }
-
-        .seccion-derecha {
-            width: 65%; height: 100%; display: flex; justify-content: center; align-items: center; position: relative;
-        }
-
-        .contenedor-foto {
-            position: relative;
-            width: 95%; 
-            max-width: 750px; 
-        }
-
-        .foto-lirio {
-            width: 100%; height: auto; display: block;
-            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
-        }
-
-        /* --- TEXTOS INTEGRADOS EN LOS PÉTALOS --- */
-        .texto-petalo {
-            position: absolute;
-            color: #9d174d; 
-            font-weight: 800;
-            font-size: 1.1rem;
+        .miniatura-img {
+            width: 100%;
+            height: 100px; /* Altura fija para que todas sean iguales */
+            object-fit: cover; /* Recorta la imagen para que llene el cuadrado sin deformarse */
+            border-radius: 10px;
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .miniatura-img:hover {
+            border-color: #db2777;
+            transform: scale(1.05);
+        }
+
+        /* 2. Visor a Pantalla Completa (Lightbox) */
+        #visor-fotos {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); /* Fondo casi negro */
+            z-index: 2000; /* Por encima de todo */
+            justify-content: center;
+            align-items: center;
             user-select: none;
+            touch-action: none; /* Necesario para el deslizamiento suave en móvil */
+        }
+
+        /* La imagen grande */
+        #foto-grande {
+            max-width: 90%;
+            max-height: 80%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            border-radius: 5px;
+            /* Animación suave al cambiar de foto */
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out; 
+        }
+
+        /* Botones de navegación (Flechas) */
+        .flecha-visor {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            padding: 20px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
             -webkit-tap-highlight-color: transparent;
-            text-shadow: 0.5px 0.5px 0px rgba(255,255,255,0.4);
         }
 
-        .texto-petalo:hover {
-            color: #db2777;
-            transform: scale(1.1) !important;
+        .flecha-visor:hover { background: rgba(255,255,255,0.3); }
+        #flecha-izq { left: 10px; }
+        #flecha-der { right: 10px; }
+
+        /* Botón Cerrar Visor (X) */
+        .cerrar-visor {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            font-weight: bold;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- POSICIONES DE LOS PÉTALOS --- */
-        #btn-carta1 { 
-            top: 32%; 
-            right: 24%; 
-            transform: rotate(18deg);
+        /* Contador de fotos (ej: 1 / 3) */
+        #contador-fotos {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            color: rgba(255,255,255,0.7);
+            font-size: 1rem;
+            font-weight: bold;
         }
 
-        #btn-fotos { 
-            top: 28%; 
-            left: 28%; 
-            transform: rotate(-15deg);
+        /* Ocultar flechas en móviles pequeños para no molestar */
+        @media (max-width: 600px) {
+            .flecha-visor { display: none; }
         }
 
-        #btn-proximamente { 
-            top: 55%; 
-            right: 55%; 
-            transform: rotate(-5deg);
-            font-size: 0.9rem;
-        }
-
-        /* --- MODALES --- */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 1000;
-            justify-content: center; align-items: center; backdrop-filter: blur(5px);
-        }
-        .ventana {
-            background: #fffcf2; color: #333; padding: 40px; border-radius: 20px;
-            width: 80%; max-width: 400px; text-align: center;
-        }
-        .btn-cerrar {
-            background: #db2777; color: white; border: none; padding: 12px 25px;
-            border-radius: 10px; margin-top: 25px; cursor: pointer; font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -137,81 +160,198 @@
                 "Cada segundo que pasa te quiero más mi tontita, que este numero llegue a infinito"
             </p>
         </div>
-
         <div class="seccion-derecha">
             <div class="contenedor-foto">
                 <img src="lirio.png" class="foto-lirio" alt="Lirio">
-                
-                <div id="btn-carta1" class="texto-petalo" onclick="abrir('carta1')">Carta 1</div>
-                <div id="btn-fotos" class="texto-petalo" onclick="abrir('fotos')">Fotos</div>
+                <div id="btn-cartas" class="texto-petalo" onclick="abrir('menu-cartas')">Cartas</div>
+                <div id="btn-fotos" class="texto-petalo" onclick="abrirModalFotos()">Fotos</div>
                 <div id="btn-proximamente" class="texto-petalo" onclick="abrir('proximamente')">Proximamente</div>
             </div>
         </div>
     </div>
 
-    <div id="modal-carta1" class="modal">
-        <div class="ventana">
-            <p style="font-size: 1.5rem; font-style: italic; font-family: serif;">Hola Silvia</p>
-            <button class="btn-cerrar" onclick="cerrar('carta1')">Cerrar</button>
-        </div>
-    </div>
+    <div id="modal-menu-cartas" class="modal"><div class="ventana"><h2 style="color: #db2777;">Tus Cartas</h2><div class="lista-cartas"><div class="item-carta" onclick="cerrar('menu-cartas'); abrir('carta1')">📂 Carta 1 - El inicio de todo</div></div><button class="btn-cerrar" onclick="cerrar('menu-cartas')">Volver</button></div></div>
+    <div id="modal-carta1" class="modal"><div class="ventana"><div class="texto-carta"><p><strong>Hola guapetona</strong></p><p><p>Primero que todo, quiero que sepas que estoy super contento de tenerte de novia, y que me encantaría poder seguir así por el resto de mi vida. Para demostrártelo, he creado esto.</p>
+                <p>El código me ha costado mucho de hacer, pero para eso soy informático jajajaj. Lo que quiero con esto, es crear un espacio tuyo y mío, un espacio que cuando seamos mayores y lo veamos podamos recordar un montón de cosas. Ahora parece un poco vacío, pero cuando sepa mas programación lo iré mejorando. Ya se que esta no es la primera carta, pero si la primera a partir de nuestro primer año como novios y quiero que sea especial. Como puedes ver, en este espacio hay muchas cosas. La mas importante el temporizador, pero sobre todo habrán más cositas como un álbum de fotos, videos, con títulos y ordenados....Y la sección especial de cartas. En esta, iré subiendo nuevas cartas y así tu las podrás leer cuando quieras y desde donde quieras con tu móvil u ordenador, y así no las pierdes que ya te veo venir....</p>
+                <p>Todo eso dicho, quiero decirte que te quiero de verdad. Por mucho que te haga rabiar y alguna riña que hemos tenido me has demostrado este año que de verdad me quieres, y que aunque hayan cosas en las que no opinamos lo mismo, con hablarlo lo solucionamos. Sobre todo me encanta que estés dispuesta a aprender, y yo también, para eso es nuestra primera relación de verdad, y estoy muy contento de que este tipo de cosas, aunque discutamos o nos peleemos por ellas acabamos solucionándolas (ya sabes a que me refiero, como la de Altea...).</p>
+                <p>Bueno dicho eso, quiero que sepas que te has convertido en algo esencial en mi vida, pienso en ti como una mas de mi vida, que si desaparecieras, crearías un vacío que costaría de llenar. Me aburro, llamo a Silvia... Que no se que hacer, voy a ver si Silvia quiere hacer algo... Con quien podría hacer algo... con Silvia. Y me encanta.</p>
+                <p>Pasar tiempo contigo es muy divertido y jamás me aburro, aunque a veces no hacemos nada y estamos simplemente tumbados sin hablar, pero solo el hecho de estar juntos me sirve, aunque no hagamos nada. Además, has estado viniendo sin parar a casa de mi madre a verme por lo de la rodilla, te tirabas el día entero ahí. Y sin duda alguna, el mejor momento del día. Se me olvidaba por completo la lesión y el dolor, solo me divertía y estaba contento, aunque entiendo que tú no porque te gané en la guerra de plastilina...</p>
+                <p>Por no hablar de durante todo el año que me has dado, paseos, la playa... Parece ya muy lejos, pero cuando quedábamos encima de tu casa para darnos besitos... La cena en la playa con las pizzas... La cena en tu coche con las hamburguesas... Los bolos... La cena en el restaurante de las pizzas italianas... Y muchas más que se haría eterna esta carta.</p>
+                <p>En fin, que sepas que me encantas, todo pero todo TODO. Y que quiero seguir contigo hasta que en el contador ponga 100 años. Te quiero mi amor.</p>
+                <p><strong>PD:</strong> incluso cuando seamos abuelitos, ese contador seguirá contando, incluso cuando muramos nuestros nietos lo podrán ver jajajjaja, aunque seas así de tontita.</p></div><button class="btn-cerrar" onclick="cerrar('carta1'); abrir('menu-cartas')">Volver</button></div></div>
 
     <div id="modal-fotos" class="modal">
-        <div class="ventana">
-            <p style="font-weight: bold;">Mas adelante</p>
-            <button class="btn-cerrar" onclick="cerrar('fotos')">Cerrar</button>
+        <div class="ventana" style="max-width: 600px;"> <h2 style="color: #db2777; margin-bottom: 5px;">Nuestro Álbum</h2>
+            <p style="color: #666; font-size: 0.9rem; margin-top: 0;">Púlsalas para verlas en grande</p>
+            
+            <div class="grid-fotos" id="contenedor-miniaturas">
+                </div>
+            
+            <button class="btn-cerrar" onclick="cerrarModalFotos()">Cerrar Álbum</button>
         </div>
     </div>
 
-    <div id="modal-proximamente" class="modal">
-        <div class="ventana">
-            <p style="font-weight: bold;">No te impacientes chavalita...</p>
-            <button class="btn-cerrar" onclick="cerrar('proximamente')">Cerrar</button>
-        </div>
+    <div id="visor-fotos">
+        <div id="contador-fotos"></div>
+        <button class="cerrar-visor" onclick="cerrarVisor()">&times;</button>
+        
+        <img src="" id="foto-grande" alt="Visualización">
+        
+        <button class="flecha-visor" id="flecha-izq" onclick="cambiarFoto(-1)">&#10094;</button>
+        <button class="flecha-visor" id="flecha-der" onclick="cambiarFoto(1)">&#10095;</button>
     </div>
+
+    <div id="modal-proximamente" class="modal"><div class="ventana"><p>No te impacientes chavalita...</p><button class="btn-cerrar" onclick="cerrar('proximamente')">Cerrar</button></div></div>
 
     <script>
-        function acceder() {
-            if(document.getElementById('pass').value.toLowerCase() === "silvia") {
-                document.getElementById('bloqueo').style.display = "none";
-                document.getElementById('contenido').style.display = "flex";
-            } else { alert("Nombre incorrecto..."); }
-        }
-
-        // FECHA DE INICIO: 17 de Abril, 2025
+        // --- LOGIN Y RELOJ (Sin cambios) ---
+        function acceder() { if(document.getElementById('pass').value.toLowerCase() === "silvia") { document.getElementById('bloqueo').style.display = "none"; document.getElementById('contenido').style.display = "flex"; } else { alert("Nombre incorrecto..."); } }
         const fechaInicio = new Date("April 17, 2025 00:00:00");
-
-        function actualizarReloj() {
-            const ahora = new Date();
-            const diff = Math.abs(ahora - fechaInicio);
-
-            // Constantes de tiempo
-            const msPorDia = 1000 * 60 * 60 * 24;
-            const msPorAnio = msPorDia * 365.25;
-
-            // Cálculo de Años (Enteros)
-            const anios = Math.floor(diff / msPorAnio);
-            
-            // Cálculo de Días Restantes (Reinicia a 0 al llegar al año)
-            const diasRestantes = Math.floor((diff % msPorAnio) / msPorDia);
-            
-            // Resto de unidades
-            const h = Math.floor((diff % msPorDia) / (1000 * 60 * 60));
-            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-            // Formateo con ceros a la izquierda
-            const pad = (num, size = 2) => num.toString().padStart(size, '0');
-
-            document.getElementById("reloj").innerHTML = 
-                `${pad(anios)}a ${pad(diasRestantes, 3)}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
-        }
-
-        setInterval(actualizarReloj, 1000);
-        actualizarReloj();
-
+        function actualizarReloj() { const ahora = new Date(); const diff = Math.abs(ahora - fechaInicio); const msPorDia = 1000 * 60 * 60 * 24; const msPorAnio = msPorDia * 365.25; const anios = Math.floor(diff / msPorAnio); const diasRestantes = Math.floor((diff % msPorAnio) / msPorDia); const h = Math.floor((diff % msPorDia) / (1000 * 60 * 60)); const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); const s = Math.floor((diff % (1000 * 60)) / 1000); const pad = (num, size = 2) => num.toString().padStart(size, '0'); document.getElementById("reloj").innerHTML = `${pad(anios)}a ${pad(diasRestantes, 3)}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`; }
+        setInterval(actualizarReloj, 1000); actualizarReloj();
         function abrir(id) { document.getElementById('modal-' + id).style.display = 'flex'; }
         function cerrar(id) { document.getElementById('modal-' + id).style.display = 'none'; }
+
+        /* =========================================
+           --- JS PARA LA GALERÍA DE FOTOS ---
+           ========================================= */
+
+        // 1. CONFIGURACIÓN: Lista de tus fotos
+        // Pon aquí los nombres exactos de los archivos que subas a GitHub
+        const listaFotos = [
+            'foto1.jpg',
+            'foto2.jpg',
+            'foto3.jpg'
+            // Añade más aquí: 'foto4.png', 'vacaciones.jpeg', etc.
+        ];
+
+        let indiceActual = 0; // Foto que se está viendo en grande
+
+        // 2. Cargar las miniaturas al abrir el modal
+        function abrirModalFotos() {
+            const contenedor = document.getElementById('contenedor-miniaturas');
+            contenedor.innerHTML = ''; // Limpiar por si acaso
+
+            listaFotos.forEach((nombreFoto, indice) => {
+                const img = document.createElement('img');
+                img.src = nombreFoto; // Ruta a la foto
+                img.className = 'miniatura-img';
+                img.alt = `Foto ${indice + 1}`;
+                // Al pulsar la miniatura, abre el visor en esa foto
+                img.onclick = () => abrirVisor(indice); 
+                contenedor.appendChild(img);
+            });
+
+            abrir('fotos');
+        }
+
+        function cerrarModalFotos() {
+            cerrar('fotos');
+        }
+
+        // 3. Funciones del Visor a Pantalla Completa
+        function abrirVisor(indice) {
+            indiceActual = indice;
+            actualizarFotoVisor();
+            document.getElementById('visor-fotos').style.display = 'flex';
+            // Bloquear scroll del fondo
+            document.body.style.overflow = 'hidden'; 
+            
+            // Escuchar teclado
+            document.addEventListener('keydown', manejarTeclado);
+            // Activar detección de gestos táctiles
+            activarGestosTactiles();
+        }
+
+        function cerrarVisor() {
+            document.getElementById('visor-fotos').style.display = 'none';
+            // Desbloquear scroll
+            if (document.getElementById('bloqueo').style.display === "none") {
+                 // Solo si ya se logueó
+            }
+            // Dejar de escuchar teclado
+            document.removeEventListener('keydown', manejarTeclado);
+        }
+
+        function actualizarFotoVisor() {
+            const imgGrande = document.getElementById('foto-grande');
+            const contador = document.getElementById('contador-fotos');
+            
+            // Pequeño efecto de "parpadeo" al cambiar para que se note
+            imgGrande.style.opacity = 0; 
+            
+            setTimeout(() => {
+                imgGrande.src = listaFotos[indiceActual];
+                contador.innerText = `${indiceActual + 1} / ${listaFotos.length}`;
+                imgGrande.style.opacity = 1;
+            }, 150); // Tiempo del parpadeo
+        }
+
+        function cambiarFoto(direccion) {
+            indiceActual += direccion;
+
+            // Bucle infinito: si pasas la última, vuelve a la primera
+            if (indiceActual >= listaFotos.length) {
+                indiceActual = 0;
+            }
+            if (indiceActual < 0) {
+                indiceActual = listaFotos.length - 1;
+            }
+
+            actualizarFotoVisor();
+        }
+
+        // 4. Navegación por Teclado (← y →)
+        function manejarTeclado(e) {
+            if (e.key === 'ArrowRight') cambiarFoto(1);
+            if (e.key === 'ArrowLeft') cambiarFoto(-1);
+            if (e.key === 'Escape') cerrarVisor();
+        }
+
+        // 5. Navegación Táctil (Swipe/Deslizar en móvil)
+        let toqueInicioX = 0;
+        let toqueFinX = 0;
+
+        function activarGestosTactiles() {
+            const visor = document.getElementById('visor-fotos');
+            
+            // Detectar dónde empieza el dedo
+            visor.addEventListener('touchstart', e => {
+                toqueInicioX = e.changedTouches[0].screenX;
+            }, false);
+
+            // Detectar dónde termina el dedo
+            visor.addEventListener('touchend', e => {
+                toqueFinX = e.changedTouches[0].screenX;
+                manejarGestoSwipe();
+            }, false);
+        }
+
+        function manejarGestoSwipe() {
+            const imgGrande = document.getElementById('foto-grande');
+            const umbralSensibilidad = 50; // Píxeles mínimos para mover
+
+            // Deslizar a la izquierda (Siguiente)
+            if (toqueInicioX - toqueFinX > umbralSensibilidad) {
+                // Pequeña animación visual de deslizar
+                imgGrande.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    imgGrande.style.transform = 'translateX(0)';
+                    cambiarFoto(1);
+                }, 100);
+            }
+
+            // Deslizar a la derecha (Anterior)
+            if (toqueFinX - toqueInicioX > umbralSensibilidad) {
+                // Pequeña animación visual de deslizar
+                imgGrande.style.transform = 'translateX(20px)';
+                setTimeout(() => {
+                    imgGrande.style.transform = 'translateX(0)';
+                    cambiarFoto(-1);
+                }, 100);
+            }
+        }
+
     </script>
 </body>
 </html>
